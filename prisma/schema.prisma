@@ -1,0 +1,27 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  education String?
+  links     Json?    // { github: "...", linkedin: "...", portfolio: "..." }
+  projects  Project[]
+}
+
+model Project {
+  id          Int     @id @default(autoincrement())
+  title       String
+  description String?
+  skills      Json    // e.g. ["NestJS", "Prisma", "MySQL"]
+  link        String?
+  UserId   Int?
+  User     User? @relation(fields: [UserId], references: [id], onDelete: Cascade)
+}
