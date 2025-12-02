@@ -23,14 +23,14 @@ export class ProjectController {
 
 
   @Patch('update/:id')
-update(@Param('id', ParseIntPipe) id: number, @Body() dto: UpdateProjectDto) {
+update(@Param('id', ParseIntPipe) id: string, @Body() dto: UpdateProjectDto) {
   return this.projectService.update(id, dto);
 }
 
 
 
 @Delete(':id')
-delete(@Param('id', ParseIntPipe) id: number) {
+delete(@Param('id', ParseIntPipe) id: string) {
   return this.projectService.delete(id);
 }
 

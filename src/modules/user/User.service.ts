@@ -35,7 +35,7 @@ if(!user) throw new NotFoundException("user not found");
 return user;
 }
 
-async update(id:number, dto:UpdateUserDto){
+async update(id:string, dto:UpdateUserDto){
 return this.prisma.user.update({
   where: {id:id},
   data:dto as any,
@@ -52,7 +52,7 @@ return this.prisma.user.update({
 // );
 // }
 
-async delete(id: number) {
+async delete(id: string) {
   return this.prisma.user.delete({
     where: { id },
   });

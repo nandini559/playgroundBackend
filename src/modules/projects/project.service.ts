@@ -20,7 +20,7 @@ async findAll(){
   return this.prisma.project.findMany();
 }
 
-async update(id:number, dto:UpdateProjectDto){
+async update(id:string, dto:UpdateProjectDto){
 return this.prisma.project.update({
   where: {id:id},
   data:dto as any,
@@ -31,7 +31,7 @@ return this.prisma.project.update({
 
 
 
-async delete(id: number) {
+async delete(id: string) {
   return this.prisma.project.delete({
     where: { id },
   });
