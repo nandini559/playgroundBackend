@@ -12,6 +12,11 @@ export class CreateProjectDto {
   @IsEmail()
   description: string;
 
+   @ApiProperty()
+  @IsEmail()
+  userId: string;
+
+
   @ApiProperty()
   @IsNotEmpty()
   skills: string;
