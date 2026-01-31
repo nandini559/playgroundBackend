@@ -8,11 +8,15 @@ import { CreateHobbyDto } from './dto/Create-Hobby.dto';
 export class HobbyService {
   constructor(private prisma: PrismaService) {}
 
-  async create(dto: CreateHobbyDto) {
-    return this.prisma.hobby.create({
-      data: dto,
-    });
-  }
+  // async create(dto: CreateHobbyDto) {
+  //   return this.prisma.hobby.create({
+  //      data: {
+  //       name: dto.name,
+       
+       
+  //     },
+  //   });
+  // }
 
   async findAll() {
     return this.prisma.hobby.findMany();

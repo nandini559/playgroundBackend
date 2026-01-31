@@ -7,6 +7,10 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+
+
+
+
 model User {
   id        String    @id @default(uuid())
   name      String
@@ -16,6 +20,12 @@ model User {
   projects  Project[]
   hobbies   Hobby[]
 }
+
+
+
+
+
+
 
 model Project {
   id          String  @id @default(uuid())
@@ -27,6 +37,11 @@ model Project {
   User        User?   @relation(fields: [UserId], references: [id], onDelete: Cascade)
 }
 
+
+
+
+
+
 model Hobby {
   id    String @id @default(uuid())
   name  String
@@ -34,3 +49,25 @@ model Hobby {
   User    User? @relation(fields: [UserId], references: [id])
 }
 
+
+
+
+
+model ExpanseTracker {
+  id        String    @id @default(uuid())
+  title     String
+  amount    Decimal   @db.Decimal(10, 2)
+  category  Category
+  date      DateTime
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+
+  @@index([date])
+}
+
+enum Category {
+  Food
+  Travel
+  Utilities
+  Other
+}

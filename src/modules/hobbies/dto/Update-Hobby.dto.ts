@@ -1,7 +1,8 @@
 import { IsEmail, IsNotEmpty, IsOptional, IsString, IsEnum } from 'class-validator';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, PartialType } from '@nestjs/swagger';
+import { CreateHobbyDto } from './Create-Hobby.dto';
 
-export class UpdateHobbyDto {
+export class UpdateHobbyDto extends PartialType(CreateHobbyDto){
 
 
   @ApiProperty()

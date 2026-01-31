@@ -17,6 +17,7 @@ export class CreateHobbyDto {
   userId: string;
 
 
+   name: string;
   
  
 

@@ -10,10 +10,10 @@ import { CreateHobbyDto } from './dto/Create-Hobby.dto';
 export class HobbyController {
   constructor(private readonly hobbyService: HobbyService) {}
 
-  @Post('create')
-  create(@Body() dto: CreateHobbyDto) {
-    return this.hobbyService.create(dto);
-  }
+  // @Post('create')
+  // create(@Body() dto: CreateHobbyDto) {
+  //   return this.hobbyService.create(dto);
+  // }
 
   @Get('list')
   findAll () {
