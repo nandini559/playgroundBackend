@@ -15,11 +15,13 @@ model User {
   id        String    @id @default(uuid())
   name      String
   email     String    @unique
+  password  String?
   education String?
-  links     Json? // { github: "...", linkedin: "...", portfolio: "..." }
+  links     Json?
   projects  Project[]
   hobbies   Hobby[]
 }
+
 
 
 
