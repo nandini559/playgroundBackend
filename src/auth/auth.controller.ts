@@ -1,26 +1,59 @@
-import {Body, Controller, Post} from "@nestjs/common";
-import {LoginDto} from "./dto/login.dto";
-import {ApiTags} from "@nestjs/swagger";
-import {AuthService} from "./auth.service";
-import {RegisterDto} from "./dto/register.dto";
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Req,
+  UseGuards
+} from "@nestjs/common";
+import { ApiTags } from "@nestjs/swagger";
+import { AuthService } from "./auth.service";
+import { LoginDto } from "./dto/login.dto";
+import { RegisterDto } from "./dto/register.dto";
+import { JwtAuthGuard } from "./jwt-auth.guard";
+
+import type { Request } from "express";
+
+interface RequestWithUser extends Request {
+  user: any;
+}
 
 @ApiTags("Auth")
 @Controller("auth")
 export class AuthController {
-  constructor(private authService : AuthService) {}
+  constructor(private authService: AuthService) {}
 
+  // 🔐 GET LOGGED IN USER
+  @UseGuards(JwtAuthGuard)
+  @Get("me")
+  getMe(@Req() req: RequestWithUser) {
+    return req.user;
+  }
+
+  // 🟣 REGISTER
   @Post("register")
-  register(@Body()registerDto : RegisterDto) {
-    return this.authService.register(registerDto.email, registerDto.password);
+  register(@Body() registerDto: RegisterDto) {
+    return this.authService.register(
+      registerDto.email,
+      registerDto.password
+    );
   }
 
+  // 🟣 LOGIN → RETURN TOKEN ONLY
   @Post("login")
-  login(@Body()loginDto : LoginDto) {
-    return this.authService.login(loginDto.email, loginDto.password);
+  async login(@Body() dto: LoginDto) {
+    const { access_token, user } =
+      await this.authService.login(dto.email, dto.password);
+
+    return {
+      access_token,
+      user
+    };
   }
 
+  // 🟣 LOGOUT
   @Post("logout")
   logout() {
-    return this.authService.logout();
+    return { message: "Logged out successfully" };
   }
 }

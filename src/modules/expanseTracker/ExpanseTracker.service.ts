@@ -34,8 +34,12 @@ export class ExpanseTrackerService {
   }
 
   async delete(id : string) {
-    return this.prisma.expanseTracker.delete({where: {
-        id
-      }});
+    try {
+      return await this.prisma.expanseTracker.delete({where: {
+          id
+        }});
+    } catch (error) {
+      throw new NotFoundException("Expense not found");
+    }
   }
 }
