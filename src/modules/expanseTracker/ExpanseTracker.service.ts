@@ -7,39 +7,80 @@ import {UpdateExpanseTrackerDto} from "./dto/Update-ExpanseTracker.dto";
 export class ExpanseTrackerService {
   constructor(private prisma : PrismaService) {}
 
-  async create(dto : CreateExpanseTrackerDto) {
-    return this.prisma.expanseTracker.create({data: dto as any});
+  async createExpense(userId : string, dto : CreateExpanseTrackerDto) {
+    return this.prisma.expanseTracker.create({
+      data: {
+        title: dto.title,
+        amount: dto.amount,
+        category: dto.category,
+        date: dto.date,
+        userId: userId
+      }
+    });
   }
 
-  async findAll() {
-    return this.prisma.expanseTracker.findMany();
+  async findAll(userId : string) {
+    return this.prisma.expanseTracker.findMany({
+      where: {
+        userId: userId
+      }
+    });
   }
 
-  async findOne(id : string) {
-    const expanseTracker = await this.prisma.expanseTracker.findUnique({where: {
-        id
-      }});
+  async findOne(userId : string, id : string) {
+    const expense = await this.prisma.expanseTracker.findFirst({
+      where: {
+        id,
+        userId // 🔥 ownership check
+      }
+    });
 
-    if (!expanseTracker) {
-      throw new NotFoundException("expanse not found");
-    }
-
-    return expanseTracker;
-  }
-
-  async update(id : string, dto : UpdateExpanseTrackerDto) {
-    return this.prisma.expanseTracker.update({where: {
-        id
-      }, data: dto as any});
-  }
-
-  async delete(id : string) {
-    try {
-      return await this.prisma.expanseTracker.delete({where: {
-          id
-        }});
-    } catch (error) {
+    if (!expense) {
       throw new NotFoundException("Expense not found");
     }
+
+    return expense;
+  }
+
+  async update(userId : string, id : string, dto : UpdateExpanseTrackerDto) {
+    const expense = await this.prisma.expanseTracker.findFirst({
+      where: {
+        id,
+        userId
+      }
+    });
+
+    if (!expense) {
+      throw new NotFoundException("Expense not found");
+    }
+
+    return this.prisma.expanseTracker.update({
+      where: {
+        id
+      },
+      data: {
+        title: dto.title,
+        amount: dto.amount,
+        category: dto.category,
+        date: dto.date
+      }
+    });
+  }
+
+  async delete(userId : string, id : string) {
+    const expense = await this.prisma.expanseTracker.findFirst({
+      where: {
+        id,
+        userId
+      }
+    });
+
+    if (!expense) {
+      throw new NotFoundException("Expense not found");
+    }
+
+    return this.prisma.expanseTracker.delete({where: {
+        id
+      }});
   }
 }

@@ -11,16 +11,7 @@ datasource db {
 
 
 
-model User {
-  id        String    @id @default(uuid())
-  name      String
-  email     String    @unique
-  password  String?
-  education String?
-  links     Json?
-  projects  Project[]
-  hobbies   Hobby[]
-}
+
 
 
 
@@ -52,6 +43,18 @@ model Hobby {
 }
 
 
+model User {
+  id        String    @id @default(uuid())
+  name      String
+  email     String    @unique
+  password  String?
+  education String?
+  links     Json?
+  projects  Project[]
+  hobbies   Hobby[]
+
+  expanseTrackers ExpanseTracker[]
+}
 
 
 
@@ -63,6 +66,9 @@ model ExpanseTracker {
   date      DateTime
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
+
+  userId    String
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@index([date])
 }

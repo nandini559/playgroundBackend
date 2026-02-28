@@ -4,44 +4,45 @@ import {
   Delete,
   Get,
   Param,
-  ParseIntPipe,
   Patch,
   Post,
-  Res
+  Req,
+  UseGuards
 } from "@nestjs/common";
+import {AuthGuard} from "@nestjs/passport";
 import {ApiTags} from "@nestjs/swagger";
 import {ExpanseTrackerService} from "./ExpanseTracker.service";
 import {CreateExpanseTrackerDto} from "./dto/Create-ExpanseTracker.dto";
 import {UpdateExpanseTrackerDto} from "./dto/Update-ExpanseTracker.dto";
-import {LoginDto} from "src/auth/dto/login.dto";
-import {Response} from "express";
 
 @ApiTags("ExpanseTracker")
 @Controller("expanseTracker")
+@UseGuards(AuthGuard("jwt")) // 🔥 apply once here
 export class ExpanseTrackerController {
   constructor(private readonly expanseTrackerService : ExpanseTrackerService) {}
 
-  @Post("create")
-  create(@Body()dto : CreateExpanseTrackerDto) {
-    return this.expanseTrackerService.create(dto);
+  @Post()
+  create(@Req()req, @Body()dto : CreateExpanseTrackerDto) {
+    return this.expanseTrackerService.createExpense(req.user.userId, dto);
   }
 
   @Get("list")
-  findAll() {
-    return this.expanseTrackerService.findAll();
+  findAll(@Req()req) {
+    return this.expanseTrackerService.findAll(req.user.userId);
   }
 
   @Get(":id")
-  findOne(@Param("id")id : string) {
-    return this.expanseTrackerService.findOne(id);
+  findOne(@Req()req, @Param("id")id : string) {
+    return this.expanseTrackerService.findOne(req.user.userId, id);
   }
 
   @Patch("update/:id")
-  update(@Param("id")id : string, @Body()dto : UpdateExpanseTrackerDto) {
-    return this.expanseTrackerService.update(id, dto);
+  update(@Req()req, @Param("id")id : string, @Body()dto : UpdateExpanseTrackerDto) {
+    return this.expanseTrackerService.update(req.user.userId, id, dto);
   }
+
   @Delete(":id")
-  delete(@Param("id")id : string) {
-    return this.expanseTrackerService.delete(id);
+  delete(@Req()req, @Param("id")id : string) {
+    return this.expanseTrackerService.delete(req.user.userId, id);
   }
 }
